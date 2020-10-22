@@ -78,18 +78,29 @@ done
 echo ${singlet[heads]}
 echo ${singlet[tails]}
 
-echo $heads $trails | awk '{print "Persentage of heads - " ((100*$1/$2)) }'
-echo $tails $trails | awk '{print "Persentage of tails - " ((100*$1/$2)) }'
+array[0]=$(echo $heads $trails | awk '{print ((100*$1/$2)) }')
+array[1]=$(echo $tails $trails | awk '{print ((100*$1/$2)) }')
+
+echo "Persentage of heads - " ${array[0]}
+echo "Persentage of tails - " ${array[1]}
+
+
 echo ${doublet[heads]}
 echo ${doublet[headtail]}
 echo ${doublet[tailhead]}
 echo ${doublet[tails]}
 
 
-echo $doubletHead $trails | awk '{print "Persentage of heads combination - " ((100*$1/$2)) }'
-echo $doubletHeadTail $trails | awk '{print "Persentage of head tail combination - " ((100*$1/$2)) }'
-echo $doubletTailHead $trails | awk '{print "Persentage of tail head combination- " ((100*$1/$2)) }'
-echo $doubletTail $trails | awk '{print "Persentage of tails - " ((100*$1/$2)) }'
+array[2]=$(echo $doubletHead $trails | awk '{print ((100*$1/$2)) }')
+array[3]=$(echo $doubletHeadTail $trails | awk '{print ((100*$1/$2)) }')
+array[4]=$(echo $doubletTailHead $trails | awk '{print ((100*$1/$2)) }')
+array[5]=$(echo $doubletTail $trails | awk '{print ((100*$1/$2)) }')
+
+echo "Persentage of heads combination - " ${array[2]}
+echo "Persentage of head tail combination - " ${array[3]}
+echo "Persentage of tail head combination - " ${array[4]}
+echo "Persentage of tails combination - " ${array[5]}
+
 
 echo ${tripplet[HHH]}
 echo ${tripplet[HHT]}
@@ -100,11 +111,38 @@ echo ${tripplet[THT]}
 echo ${tripplet[TTH]}
 echo ${tripplet[TTT]}
 
-echo $tHHH $trails | awk '{print "Persentage of HHH combination - " ((100*$1/$2)) }'
-echo $tHHT $trails | awk '{print "Persentage of HHT combination - " ((100*$1/$2)) }'
-echo $tHTH $trails | awk '{print "Persentage of HTH combination - " ((100*$1/$2)) }'
-echo $tHTT $trails | awk '{print "Persentage of HTT combination - " ((100*$1/$2)) }'
-echo $tTHH $trails | awk '{print "Persentage of THH combination - " ((100*$1/$2)) }'
-echo $tTHT $trails | awk '{print "Persentage of THT combination - " ((100*$1/$2)) }'
-echo $tTTH $trails | awk '{print "Persentage of TTH combination - " ((100*$1/$2)) }'
-echo $tTTT $trails | awk '{print "Persentage of TTT combination - " ((100*$1/$2)) }'
+array[6]=$(echo $tHHH $trails | awk '{print ((100*$1/$2)) }')
+array[7]=$(echo $tHHT $trails | awk '{print ((100*$1/$2)) }')
+array[8]=$(echo $tHTH $trails | awk '{print ((100*$1/$2)) }')
+array[9]=$(echo $tHTT $trails | awk '{print ((100*$1/$2)) }')
+array[10]=$(echo $tTHH $trails | awk '{print ((100*$1/$2)) }')
+array[11]=$(echo $tTHT $trails | awk '{print ((100*$1/$2)) }')
+array[12]=$(echo $tTTH $trails | awk '{print ((100*$1/$2)) }')
+array[13]=$(echo $tTTT $trails | awk '{print ((100*$1/$2)) }')
+
+
+echo "Persentage of HHH combination - " ${array[6]}
+echo "Persentage of HHT combination - " ${array[7]}
+echo "Persentage of HTH combination - " ${array[8]}
+echo "Persentage of HTT combination - " ${array[9]}
+echo "Persentage of THH combination - " ${array[10]}
+echo "Persentage of THT combination - " ${array[11]}
+echo "Persentage of TTH combination - " ${array[12]}
+echo "Persentage of TTT combination - " ${array[13]}
+
+for (( i=0; i<14; i++ ))
+do
+        for (( j=0; j<$((14-$i-1)); j++ ))
+        do
+		k=$(echo ${array[$j]} | awk '{printf "%d",$1}')
+		l=$(echo ${array[$(($j+1))]} | awk '{printf "%d",(($1))}')
+                if [ $k -gt $l ]
+                then
+                    temp=${array[$j]}
+                    array[$j]=${array[$(($j+1))]}
+                    array[$(($j+1))]=$temp
+                fi
+        done
+done
+
+echo "The percentage of winning combination of these is " ${array[13]}
